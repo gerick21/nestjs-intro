@@ -132,10 +132,9 @@ export class UsersController {
     @Param() getUsersParamDto: GetUsersParamDto,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-  ): string {
-    console.log(getUsersParamDto);
-
-    return 'Validation pipe';
+  ) {
+    /*Returns all the users. */
+    return this.usersService.findAll(getUsersParamDto, limit, page);
   }
 
   @Patch()

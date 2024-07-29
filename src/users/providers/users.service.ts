@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { GetUsersParamDto } from '../dtos/get-users-param.dto';
 
 @Injectable()
 export class UsersService {
@@ -6,20 +7,29 @@ export class UsersService {
     return 'Hello from users service.';
   }
 
-  findAllUsers() {
+  findAll(getUsersParamDto: GetUsersParamDto, limit: number, page: number) {
     return [
       {
-        firstName: 'John',
-        email: 'johndoe@gmail.com',
+        firstName: 'Dwight',
+        email: 'dwightschrute@gmail.com',
       },
       {
-        firstName: 'Ryan',
-        email: 'ryan@gmail.com',
+        firstName: 'Pam',
+        email: 'pambeasly@gmail.com',
       },
       {
         firstName: 'Jim',
-        email: 'jim@gmail.com',
+        email: 'jimhalpert@gmail.com',
       },
     ];
+  }
+
+  /*Find a user by id */
+  findOneById(id: number) {
+    return {
+      id: 123,
+      firstName: 'Stanley',
+      email: 'stanleyhudson@gmail.com',
+    };
   }
 }
