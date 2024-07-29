@@ -9,6 +9,7 @@ import {
   Req,
   Headers,
   Ip,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 // import { Request } from 'express';
@@ -22,12 +23,14 @@ export class UsersController {
    * @param params - Parameters from the route.
    * @param query - Query parameters from the URL.
    */
+  /*
   @Get('/:id/:optional?')
   getHelloWithId(@Param() params: any, @Query() query: any): string {
     console.log(params);
     console.log(query);
     return this.usersService.helloWorld();
   }
+    */
 
   /**
    * Handles POST requests to create users.
@@ -56,6 +59,8 @@ export class UsersController {
    * @param id - Specific parameter from the route.
    * @param limit - Specific query parameter from the URL.
    */
+
+  /*
   @Get('/:id/:optional?')
   getHelloWithIdSpecific(
     @Param('id') id: any,
@@ -65,6 +70,7 @@ export class UsersController {
     console.log({ limit });
     return this.usersService.helloWorld();
   }
+    */
 
   /**
    * Handles POST requests to create users with specific body parameter.
@@ -95,8 +101,30 @@ export class UsersController {
    */
   @Post()
   createUsersWithIp(@Body() request: any, @Ip() ip: any) {
-    console.log(request);
+    console.log({ request });
     console.log({ ip });
     return 'You sent a POST request to users endpoint';
+  }
+
+  /*Validation and pipes */
+
+  /*VALIDATE Params */
+
+  /*Parse Int Pipe */
+
+  /**Remember the ? makes the parameter optional
+   *
+   * Not optional:  @Get('/:id')
+   * Optional: @Get('/:id?')
+   */
+
+  @Get('/:id')
+  getHelloWithIdOptional(
+    @Param('id', ParseIntPipe) id: number | undefined,
+    @Query('limit') limit: any,
+  ): string {
+    console.log(typeof id);
+    console.log({ limit });
+    return 'Validation pipe';
   }
 }
