@@ -13,7 +13,7 @@ import { UsersService } from './providers/users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { GetUsersParamDto } from './dtos/get-users-param.dto';
 import { PatchUserDto } from './dtos/patch-user.dto';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 // import { Request } from 'express';
 
 @Controller('users')
@@ -130,6 +130,13 @@ export class UsersController {
    */
 
   @Get('/:id')
+  @ApiOperation({
+    summary: 'Fetches a list of users on the application',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Users fetch succesfully based on the query.',
+  })
   @ApiQuery({
     name: 'limit',
     type: 'number',
