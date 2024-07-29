@@ -61,5 +61,6 @@ export class CreatePostDto {
   /*Check if all the values of the array have minimun 3 characters. */
   @MinLength(3, { each: true })
   tags: string[];
+
   metaOptions: [{ key: 'sidebarEnabled'; value: true }];
 }
