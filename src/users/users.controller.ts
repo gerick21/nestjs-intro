@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   DefaultValuePipe,
   ValidationPipe,
+  Patch,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -138,4 +139,7 @@ export class UsersController {
 
     return 'Validation pipe';
   }
+
+  @Patch()
+  patchUser(@Body() body) {}
 }
