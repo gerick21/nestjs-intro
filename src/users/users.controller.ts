@@ -3,16 +3,16 @@ import {
   Controller,
   Get,
   Param,
-  Patch,
   Post,
   Query,
-  Req,
   Headers,
   Ip,
   ParseIntPipe,
   DefaultValuePipe,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { CreateUserDto } from './dtos/create-user.dto';
 // import { Request } from 'express';
 
 @Controller('users')
@@ -37,9 +37,10 @@ export class UsersController {
    * Handles POST requests to create users.
    * @param request - Body of the request.
    */
+
   @Post()
-  createUsers(@Body() request: any) {
-    console.log(request);
+  createUsers(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
+    console.log(createUserDto);
     return 'You sent a POST request to users endpoint';
   }
 
@@ -77,35 +78,42 @@ export class UsersController {
    * Handles POST requests to create users with specific body parameter.
    * @param email - Specific body parameter.
    */
+  /*
   @Post()
   createUsersWithEmail(@Body('email') email: any) {
     console.log({ email });
     return 'You sent a POST request to users endpoint';
   }
+    */
 
   /**
    * Handles POST requests to create users and logs request headers.
    * @param request - Body of the request.
    * @param headers - HTTP headers of the request.
    */
+  /*
   @Post()
   createUsersWithHeaders(@Body() request: any, @Headers() headers: any) {
     console.log(request);
     console.log({ headers });
     return 'You sent a POST request to users endpoint';
   }
+    */
 
   /**
    * Handles POST requests to create users and logs the IP address.
    * @param request - Body of the request.
    * @param ip - IP address of the request.
    */
+
+  /*
   @Post()
   createUsersWithIp(@Body() request: any, @Ip() ip: any) {
     console.log({ request });
     console.log({ ip });
     return 'You sent a POST request to users endpoint';
   }
+    */
 
   /*Validation and pipes */
 
