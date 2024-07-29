@@ -10,6 +10,7 @@ import {
   Headers,
   Ip,
   ParseIntPipe,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 // import { Request } from 'express';
@@ -121,10 +122,14 @@ export class UsersController {
   @Get('/:id')
   getHelloWithIdOptional(
     @Param('id', ParseIntPipe) id: number | undefined,
-    @Query('limit') limit: any,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
   ): string {
     console.log(typeof id);
     console.log({ limit });
+
+    console.log('Limit', limit);
+    console.log('Page', page);
     return 'Validation pipe';
   }
 }
