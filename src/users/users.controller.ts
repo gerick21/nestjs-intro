@@ -9,7 +9,7 @@ import {
   DefaultValuePipe,
   Patch,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UsersService } from './providers/users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { GetUsersParamDto } from './dtos/get-users-param.dto';
 import { PatchUserDto } from './dtos/patch-user.dto';
@@ -140,6 +140,6 @@ export class UsersController {
 
   @Patch()
   patchUser(@Body() patchUserDto: PatchUserDto) {
-    return patchUserDto;
+    return 'Everything is fine';
   }
 }
