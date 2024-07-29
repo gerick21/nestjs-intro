@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { GetUsersParamDto } from './dtos/get-users-param.dto';
 // import { Request } from 'express';
 
 @Controller('users')
@@ -129,15 +130,12 @@ export class UsersController {
 
   @Get('/:id')
   getHelloWithIdOptional(
-    @Param('id', ParseIntPipe) id: number | undefined,
+    @Param() getUsersParamDto: GetUsersParamDto,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
   ): string {
-    console.log(typeof id);
-    console.log({ limit });
+    console.log(getUsersParamDto);
 
-    console.log('Limit', limit);
-    console.log('Page', page);
     return 'Validation pipe';
   }
 }
