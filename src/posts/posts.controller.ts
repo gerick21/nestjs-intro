@@ -16,5 +16,7 @@ export class PostsController {
   }
 
   @Post()
-  createPost(@Body() createPostDto: CreatePostDto) {}
+  createPost(@Body() createPostDto: CreatePostDto) {
+    return 'Post created successfully';
+  }
 }
