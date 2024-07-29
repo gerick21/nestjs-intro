@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { GetUsersParamDto } from '../dtos/get-users-param.dto';
+import { AuthService } from '../../auth/providers/auth.service';
 
 @Injectable()
 export class UsersService {
+  constructor(authService: AuthService) {}
+
   helloWorld(): string {
     return 'Hello from users service.';
   }
