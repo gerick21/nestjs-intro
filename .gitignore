@@ -4,6 +4,7 @@
 /build
 
 .history
+documentation
 
 # Logs
 logs
@@ -59,3 +60,5 @@ pids
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 .history/src/app/app.controller_20240726143614.ts
+documentation/coverage.html
+documentation/dependencies.html
