@@ -23,8 +23,6 @@ export class PostsService {
     It is not such a good practice but we have to do it.
 
     */
-    @InjectRepository(MetaOption)
-    private readonly metaOptionsRepository: Repository<MetaOption>,
 
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
