@@ -14,9 +14,10 @@ export class PostsService {
     private readonly postRepository: Repository<Post>,
   ) {}
 
+  /*Creating new posts */
   async createPost(createPostDto: CreatePostDto) {
-    //let newPost = this.postRepository.create(createPostDto);
-    // await this.postRepository.save(createPostDto);
+    let newPost = this.postRepository.create(createPostDto);
+    return await this.postRepository.save(newPost);
   }
   findAll(userId: string) {
     /*Call the users service and if the user exists, return the post. */
