@@ -5,6 +5,7 @@ import { Post } from '../post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePostDto } from '../dtos/create-post.dto';
 import { MetaOption } from 'src/meta-options/meta-option.entity';
+import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class PostsService {
@@ -21,10 +22,18 @@ export class PostsService {
     */
     @InjectRepository(MetaOption)
     private readonly metaOptionsRepository: Repository<MetaOption>,
+
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
   ) {}
 
   /*Creating new posts */
   async createPost(@Body() createPostDto: CreatePostDto) {
+    //Find author from database based on authorId
+    let user = await this.usersRepository.findOneBy({
+      id: createPostDto.authorId,
+    });
+
     /*Remember metaOptions are optional. */
     /*
     Due to cascade set to true (in the post entity), we dont need to worry about the metaOptions creation
@@ -32,7 +41,10 @@ export class PostsService {
     */
 
     //Create post
-    let newPost = this.postsRepository.create(createPostDto);
+    let newPost = this.postsRepository.create({
+      ...createPostDto,
+      author: user,
+    });
 
     //If the dto had metaOptions, the add them to the post.
 
@@ -40,8 +52,6 @@ export class PostsService {
   }
   async findAll(userId: string) {
     /*Call the users service and if the user exists, return the post. */
-
-    const user = this.usersService.findOneById(userId);
 
     let posts = await this.postsRepository.find({
       relations: {
@@ -55,7 +65,7 @@ export class PostsService {
   async deletePost(id: number) {
     /*With the bi directional relations and CASCADE onDelete when we delete the post the metaOptions will be
     deleted as well.
-      */
+    */
     await this.postsRepository.delete(id);
 
     return { deleted: true, id };
