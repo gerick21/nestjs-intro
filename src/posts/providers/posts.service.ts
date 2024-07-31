@@ -51,4 +51,19 @@ export class PostsService {
 
     return posts;
   }
+
+  async deletePost(id: number) {
+    //Find the post and check if exists
+    /*we use the {} in order to check if the id is similar to an id in the database, so basically is id===id? (checks a matching id) */
+    let post = await this.postsRepository.findOneBy({ id: id });
+
+    //Delete the post
+
+    await this.postsRepository.delete(id);
+
+    //Delete the metaOptions
+    await this.metaOptionsRepository.delete(post.metaOptions.id);
+
+    return { deleted: true, id };
+  }
 }
