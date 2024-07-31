@@ -71,7 +71,17 @@ export class Post {
   })
   publishOn?: Date;
 
-  @OneToOne(() => MetaOption)
+  /*La opción cascade: true significa que cualquier operación de persistencia realizada en la entidad principal 
+  (como guardar o actualizar) se propagará automáticamente a la entidad relacionada. 
+  Esto incluye: Insert, Update o remove*/
+
+  @OneToOne(() => MetaOption, {
+    cascade: true,
+    /*For default when we fetch for all the posts in our database, the response wont return the metaOptions
+    related to a post, so setting eager:true we force the database to return all the columns along with the foreign keys.
+     */
+    eager: true,
+  })
   /**
    JoinColumn is responsibe for creating a column inside this entity table (Post)
    */

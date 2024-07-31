@@ -12,7 +12,7 @@ export class PostsService {
     private readonly usersService: UsersService,
 
     @InjectRepository(Post)
-    private readonly postRepository: Repository<Post>,
+    private readonly postsRepository: Repository<Post>,
 
     /*
     In relations 1 to 1 we have to inject repositories from other entities
@@ -25,46 +25,30 @@ export class PostsService {
 
   /*Creating new posts */
   async createPost(@Body() createPostDto: CreatePostDto) {
-    /*We need to create metaOptions first in order to create a post (due to the @joinColumn() dependency.) */
     /*Remember metaOptions are optional. */
-    /*Create metaOptions. */
-    /*If the createPostDto has metaOptions we create them with the repository, if not just continue. */
-    let metaOptions = createPostDto.metaOptions
-      ? this.metaOptionsRepository.create(createPostDto.metaOptions)
-      : null;
-
-    /*Save the metaOptions in the database*/
-    if (metaOptions) {
-      await this.metaOptionsRepository.save(metaOptions);
-    }
+    /*
+    Due to cascade set to true (in the post entity), we dont need to worry about the metaOptions creation
+    because when a post is created that means a meta option will be created as well.
+    */
 
     //Create post
-    let newPost = this.postRepository.create(createPostDto);
+    let newPost = this.postsRepository.create(createPostDto);
 
     //If the dto had metaOptions, the add them to the post.
 
-    if (metaOptions) {
-      newPost.metaOptions = metaOptions;
-    }
-
-    return await this.postRepository.save(newPost);
+    return await this.postsRepository.save(newPost);
   }
-  findAll(userId: string) {
+  async findAll(userId: string) {
     /*Call the users service and if the user exists, return the post. */
 
     const user = this.usersService.findOneById(userId);
 
-    return [
-      {
-        user: user,
-        title: 'Test Title',
-        content: 'Test content',
+    let posts = await this.postsRepository.find({
+      relations: {
+        metaOptions: true,
       },
-      {
-        user: user,
-        title: 'Test Title 2',
-        content: 'Test content 2',
-      },
-    ];
+    });
+
+    return posts;
   }
 }
