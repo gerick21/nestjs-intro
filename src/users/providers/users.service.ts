@@ -17,6 +17,7 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import profileConfig from '../config/profile.config';
 import { error } from 'console';
+import { UsersCreateManyProvider } from './users-create-may.provider';
 
 /**
  * Class to connect Users table and perform business operations.
@@ -31,6 +32,8 @@ export class UsersService {
     private readonly profileConfiguration: ConfigType<typeof profileConfig>,
 
     private readonly dataSource: DataSource,
+
+    private readonly usersCreateManyProvider: UsersCreateManyProvider,
   ) {}
 
   async createUser(createUserDto: CreateUserDto) {
@@ -126,33 +129,6 @@ export class UsersService {
   }
 
   async createMany(createUsersDto: CreateUserDto[]) {
-    let newUsers: User[] = [];
-
-    // Create Query Runner Instance
-    const queryRunner = this.dataSource.createQueryRunner();
-
-    // Connect the query ryunner to the datasource
-    await queryRunner.connect();
-
-    // Start the transaction
-    await queryRunner.startTransaction();
-
-    try {
-      for (let user of createUsersDto) {
-        let newUser = queryRunner.manager.create(User, user);
-        let result = await queryRunner.manager.save(newUser);
-        newUsers.push(result);
-      }
-      await queryRunner.commitTransaction();
-    } catch (error) {
-      // since we have errors lets rollback the changes we made
-      await queryRunner.rollbackTransaction();
-    } finally {
-      //Finally is used does not matter if the operation completed succesfully or we catched an exception, both will enter here.
-      // you need to release a queryRunner which was manually instantiated doesnt matter if it was successfull or unsuccessfull
-      await queryRunner.release();
-    }
-
-    return newUsers;
+    return await this.usersCreateManyProvider.createMany(createUsersDto);
   }
 }
