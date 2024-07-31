@@ -1,4 +1,4 @@
-import { Body, Injectable } from '@nestjs/common';
+import { Body, Injectable, RequestTimeoutException } from '@nestjs/common';
 import { In, Repository } from 'typeorm';
 
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,11 +19,22 @@ export class TagsService {
   }
 
   async findMultipleTags(tags: number[]) {
-    let results = await this.tagsRepository.find({
-      where: {
-        id: In(tags),
-      },
-    });
+    let results = undefined;
+
+    try {
+      results = await this.tagsRepository.find({
+        where: {
+          id: In(tags),
+        },
+      });
+    } catch (error) {
+      throw new RequestTimeoutException(
+        'Unable to process your rquest at the moment, please try again later.',
+        {
+          description: 'Error connection to the database',
+        },
+      );
+    }
 
     return results;
   }

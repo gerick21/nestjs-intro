@@ -1,4 +1,10 @@
-import { Body, Injectable, Patch } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Injectable,
+  Patch,
+  RequestTimeoutException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/providers/users.service';
 import { Repository } from 'typeorm';
 import { Post } from '../post.entity';
@@ -84,12 +90,51 @@ export class PostsService {
   /*Patch dto extends CreatePostDto, so we can update just a part of a post  */
   @Patch()
   async updatePost(patchPostDto: PatchPostDto) {
+    let tags = undefined;
+    let post = undefined;
     /*Find the tags */
-    let tags = await this.tagsService.findMultipleTags(patchPostDto.tags);
-    /*Find the post */
-    let post = await this.postsRepository.findOneBy({
-      id: patchPostDto.id,
-    });
+
+    try {
+      tags = await this.tagsService.findMultipleTags(patchPostDto.tags);
+    } catch (error) {
+      throw new RequestTimeoutException(
+        'Unable to process your request at the moment, please try again later.',
+        {
+          description: 'Error connecting to the database',
+        },
+      );
+    }
+    /*Numbner of tags need to be equal */
+
+    /*Check first if no tags were found at all and number two, if the total number of tags 
+    were requested in the patch postdto is not actually equal to the number of tags that were 
+    retrieved from the database.
+     */
+
+    if (!tags || tags.lenght !== patchPostDto.tags.length) {
+      throw new BadRequestException(
+        'Please check your tag IDs and ensure they are correct',
+        {},
+      );
+    }
+
+    try {
+      /*Find the post */
+      post = await this.postsRepository.findOneBy({
+        id: patchPostDto.id,
+      });
+    } catch (error) {
+      throw new RequestTimeoutException(
+        'Unable to process your rquest at the moment, please try again later.',
+        {
+          description: 'Error connection to the database',
+        },
+      );
+    }
+
+    if (!post) {
+      throw new BadRequestException('Post ID does not exist', {});
+    }
     /*Update the properties */
 
     /*If the patchPostDto has the property title, then assign it, if not remain the same title. */
@@ -114,6 +159,17 @@ export class PostsService {
     post.tags = tags;
     /*Save the post and return it  */
 
-    return await this.postsRepository.save(post);
+    try {
+      await this.postsRepository.save(post);
+    } catch (error) {
+      throw new RequestTimeoutException(
+        'Unable to process your rquest at the moment, please try again later.',
+        {
+          description: 'Error connecting to the database',
+        },
+      );
+    }
+
+    return post;
   }
 }
