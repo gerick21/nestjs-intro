@@ -55,7 +55,9 @@ export class PostsService {
 
     let posts = await this.postsRepository.find({
       relations: {
+        /*When we fetch post this set to true will also return the metaOptions along with the author. */
         metaOptions: true,
+        author: true,
       },
     });
 

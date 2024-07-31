@@ -2,6 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -11,6 +12,7 @@ import { postStatus } from './enums/postStatus.enum';
 import { CreatePostMetaoptionsDto } from '../meta-options/dtos/create-post-meta-options.dto';
 import { MetaOption } from 'src/meta-options/meta-option.entity';
 import { User } from 'src/users/user.entity';
+import { Tag } from 'src/tags/tag.entity';
 
 @Entity()
 export class Post {
@@ -91,8 +93,9 @@ export class Post {
   metaOptions?: MetaOption;
 
   /*A post will be related to JUST ONE user */
-  @ManyToOne(() => User, (user) => user.posts)
+  @ManyToOne(() => User, (user) => user.posts, {
+    /*When we fetch for post the author will be returned as well (eager forces the foreign keys to return) */
+    eager: true,
+  })
   author: User;
-
-  tags?: string[];
 }
