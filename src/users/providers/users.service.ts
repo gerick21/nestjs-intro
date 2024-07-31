@@ -1,6 +1,8 @@
 import {
   BadRequestException,
   forwardRef,
+  HttpException,
+  HttpStatus,
   Inject,
   Injectable,
   NotFoundException,
@@ -14,6 +16,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import profileConfig from '../config/profile.config';
+import { error } from 'console';
 
 /**
  * Class to connect Users table and perform business operations.
@@ -75,21 +78,21 @@ export class UsersService {
   
    */
   findAll(getUsersParamDto: GetUsersParamDto, limit: number, page: number) {
-    console.log(this.profileConfiguration);
-    return [
+    /*Custom exception */
+    throw new HttpException(
       {
-        firstName: 'Dwight',
-        email: 'dwightschrute@gmail.com',
+        status: HttpStatus.MOVED_PERMANENTLY,
+        error: 'API endpoint does not exist',
+        fileName: 'users.service.ts',
+        lineNumber: 88,
       },
+      /*This is not sent back to the client. */
+      HttpStatus.MOVED_PERMANENTLY,
       {
-        firstName: 'Pam',
-        email: 'pambeasly@gmail.com',
+        cause: new Error(),
+        description: 'Ocurred because the API endpoint was permantly moved',
       },
-      {
-        firstName: 'Jim',
-        email: 'jimhalpert@gmail.com',
-      },
-    ];
+    );
   }
 
   /**
