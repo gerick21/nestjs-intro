@@ -75,7 +75,7 @@ export class Post {
   (como guardar o actualizar) se propagará automáticamente a la entidad relacionada. 
   Esto incluye: Insert, Update o remove*/
 
-  @OneToOne(() => MetaOption, {
+  @OneToOne(() => MetaOption, (metaOption) => metaOption.post, {
     cascade: true,
     /*For default when we fetch for all the posts in our database, the response wont return the metaOptions
     related to a post, so setting eager:true we force the database to return all the columns along with the foreign keys.
@@ -86,7 +86,6 @@ export class Post {
    JoinColumn is responsibe for creating a column inside this entity table (Post)
    */
   /*This will create a metya options id column on the post table. */
-  @JoinColumn() /*Join column is used with 1 to 1 relationship.  */
   metaOptions?: MetaOption;
 
   tags?: string[];
