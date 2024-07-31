@@ -6,16 +6,17 @@ import { AuthModule } from './auth/auth.module';
 import { MetaOptionsModule } from './meta-options/meta-options.module';
 import { Module } from '@nestjs/common';
 import { PostsModule } from './posts/posts.module';
-import { Tag } from './tags/tag.entity';
+
 import { TagsModule } from './tags/tags.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 /**
  * Importing Entities
  * */
-import { User } from './users/user.entity';
+
 import { UsersModule } from './users/users.module';
 import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
+import environmentValidation from './config/environment.validation';
 
 // Get the current NODE_ENV
 const ENV = process.env.NODE_ENV;
@@ -30,8 +31,35 @@ const ENV = process.env.NODE_ENV;
       //envFilePath: ['.env.development', '.env'],
       envFilePath: !ENV ? '.env' : `.env.${ENV}`,
       load: [appConfig, databaseConfig],
+      // validationSchema: environmentValidation,
     }),
     TypeOrmModule.forRootAsync({
+      imports: [],
+      inject: [],
+      useFactory: () => ({
+        type: 'postgres',
+        // entities: [User],
+        autoLoadEntities: true,
+        synchronize: true,
+        port: 5432,
+        username: 'postgres',
+        password: 'root',
+        host: 'localhost',
+        database: 'nestjs-blog',
+      }),
+    }),
+    TagsModule,
+    MetaOptionsModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}
+
+/*This is the right way but for some reason does not work */
+/*
+
+TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
@@ -46,10 +74,5 @@ const ENV = process.env.NODE_ENV;
         database: configService.get('database.name'),
       }),
     }),
-    TagsModule,
-    MetaOptionsModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService],
-})
-export class AppModule {}
+ 
+ */

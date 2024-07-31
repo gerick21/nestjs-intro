@@ -1,6 +1,7 @@
 import * as Joi from 'joi';
 
 export default Joi.object({
+  /*Joi validates each property */
   NODE_ENV: Joi.string()
     .valid('development', 'production', 'test', 'provision')
     .default('development'),
