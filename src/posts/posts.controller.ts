@@ -25,7 +25,7 @@ export class PostsController {
     summary: 'Creates a new post.',
   })
   createPost(@Body() createPostDto: CreatePostDto) {
-    this.postService.createPost(createPostDto);
+    return this.postService.createPost(createPostDto);
   }
 
   @ApiOperation({
