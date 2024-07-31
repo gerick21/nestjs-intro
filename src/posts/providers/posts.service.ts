@@ -1,4 +1,4 @@
-import { Body, Injectable } from '@nestjs/common';
+import { Body, Injectable, Patch } from '@nestjs/common';
 import { UsersService } from 'src/users/providers/users.service';
 import { Repository } from 'typeorm';
 import { Post } from '../post.entity';
@@ -7,6 +7,7 @@ import { CreatePostDto } from '../dtos/create-post.dto';
 import { MetaOption } from 'src/meta-options/meta-option.entity';
 import { User } from 'src/users/user.entity';
 import { TagsService } from 'src/tags/providers/tags.service';
+import { PatchPostDto } from '../dtos/patch-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -63,7 +64,8 @@ export class PostsService {
       relations: {
         /*When we fetch post this set to true will also return the metaOptions along with the author. */
         metaOptions: true,
-        author: true,
+        //author: true,
+        //tags: true,
       },
     });
 
@@ -77,5 +79,41 @@ export class PostsService {
     await this.postsRepository.delete(id);
 
     return { deleted: true, id };
+  }
+
+  /*Patch dto extends CreatePostDto, so we can update just a part of a post  */
+  @Patch()
+  async updatePost(patchPostDto: PatchPostDto) {
+    /*Find the tags */
+    let tags = await this.tagsService.findMultipleTags(patchPostDto.tags);
+    /*Find the post */
+    let post = await this.postsRepository.findOneBy({
+      id: patchPostDto.id,
+    });
+    /*Update the properties */
+
+    /*If the patchPostDto has the property title, then assign it, if not remain the same title. */
+
+    /*Remember we are updating, so the patchPostDto might not contain all the properties, and
+    that is why we check. 
+     */
+    post.title = patchPostDto.title ?? post.title;
+
+    /*The same for the remain properties */
+
+    post.content = patchPostDto.content ?? post.content;
+    post.status = patchPostDto.status ?? post.status;
+    post.postType = patchPostDto.postType ?? post.postType;
+    post.slug = patchPostDto.slug ?? post.slug;
+    post.featuredImageUrl =
+      patchPostDto.featuredImageUrl ?? post.featuredImageUrl;
+    post.publishOn = patchPostDto.publishOn ?? post.publishOn;
+
+    /*Assign new tags */
+
+    post.tags = tags;
+    /*Save the post and return it  */
+
+    return await this.postsRepository.save(post);
   }
 }

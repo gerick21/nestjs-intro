@@ -17,13 +17,13 @@ import { PatchPostDto } from './dtos/patch-post.dto';
 @Controller('posts')
 @ApiTags('Posts')
 export class PostsController {
-  constructor(private readonly postService: PostsService) {}
+  constructor(private readonly postsService: PostsService) {}
 
   /*http://localhost:3000/posts */
 
   @Get('/:userId?')
   getPosts(@Param('userId') userId: string) {
-    return this.postService.findAll(userId);
+    return this.postsService.findAll(userId);
   }
 
   @Post()
@@ -35,7 +35,7 @@ export class PostsController {
     summary: 'Creates a new post.',
   })
   createPost(@Body() createPostDto: CreatePostDto) {
-    return this.postService.createPost(createPostDto);
+    return this.postsService.createPost(createPostDto);
   }
 
   @ApiOperation({
@@ -46,12 +46,12 @@ export class PostsController {
     description: 'A 200 response if the post is updated succesfully.',
   })
   @Patch()
-  updatePost(@Body() patchPostsDto: PatchPostDto) {
-    console.log(patchPostsDto);
+  updatePost(@Body() patchPostDto: PatchPostDto) {
+    return this.postsService.updatePost(patchPostDto);
   }
 
   @Delete()
   deletePost(@Query('id', ParseIntPipe) id: number) {
-    return this.postService.deletePost(id);
+    return this.postsService.deletePost(id);
   }
 }
