@@ -12,9 +12,6 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 @Injectable()
 export class UsersService {
   constructor(
-    @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService,
-
     @InjectRepository(User)
     private readonly usersRepositosy: Repository<User>,
   ) {}
@@ -42,8 +39,8 @@ export class UsersService {
   
    */
   findAll(getUsersParamDto: GetUsersParamDto, limit: number, page: number) {
-    const isAuth = this.authService.isAuth();
-    console.log(isAuth);
+    // const isAuth = this.authService.isAuth();
+    // console.log(isAuth);
     return [
       {
         firstName: 'Dwight',
