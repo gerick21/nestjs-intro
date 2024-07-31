@@ -1,8 +1,10 @@
+import { Post } from 'src/posts/post.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -46,6 +48,10 @@ export class Tag {
     nullable: true,
   })
   featuredImageUrl?: string;
+
+  /*A tag can have many posts related, for example #humor can have many posts related */
+  @ManyToMany(() => Post, (post) => post.tags)
+  posts: Post[];
 
   @CreateDateColumn()
   createDate: Date;
