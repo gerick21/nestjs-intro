@@ -8,14 +8,14 @@ import { CreatePostMetaoptionsDto } from '../dtos/create-post-meta-options.dto';
 export class MetaOptionsService {
   constructor(
     @InjectRepository(MetaOption)
-    private readonly metaOptionRepository: Repository<MetaOption>,
+    private readonly metaOptionsRepository: Repository<MetaOption>,
   ) {}
 
   async createMetaoption(createPostMetaoptionsDto: CreatePostMetaoptionsDto) {
-    let newMetaOptions = this.metaOptionRepository.create(
+    let newMetaOption = this.metaOptionsRepository.create(
       createPostMetaoptionsDto,
     );
 
-    await this.metaOptionRepository.save(createPostMetaoptionsDto);
+    return await this.metaOptionsRepository.save(newMetaOption);
   }
 }
