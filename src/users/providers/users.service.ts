@@ -19,6 +19,24 @@ export class UsersService {
     private readonly usersRepositosy: Repository<User>,
   ) {}
 
+  async createUser(createUserDto: CreateUserDto) {
+    //check if user exists with same email
+    const existingUser = await this.usersRepositosy.findOne({
+      //checks if email exists.
+      where: {
+        email: createUserDto.email,
+      },
+    });
+    //Handle exception if user does not exist.
+    //TODO
+    //Create user
+
+    let newUser = this.usersRepositosy.create(createUserDto);
+    newUser = await this.usersRepositosy.save(newUser);
+
+    return newUser;
+  }
+
   /**
    * The method to get all the users from the database.
   
