@@ -11,12 +11,16 @@ import { MetaOptionsModule } from './meta-options/meta-options.module';
 import { Post } from './posts/post.entity';
 import { MetaOption } from './meta-options/meta-option.entity';
 import { Tag } from './tags/tag.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     UsersModule,
     PostsModule,
     AuthModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRootAsync({
       imports: [],
       inject: [],

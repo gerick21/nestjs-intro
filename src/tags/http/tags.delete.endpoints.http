@@ -1,2 +1,7 @@
 DELETE http://localhost:3000/tags/
 ?id=1
+
+
+//For soft delete.
+DELETE http://localhost:3000/tags/soft-delete
+?id=1
