@@ -6,11 +6,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePostDto } from '../dtos/create-post.dto';
 import { MetaOption } from 'src/meta-options/meta-option.entity';
 import { User } from 'src/users/user.entity';
+import { TagsService } from 'src/tags/providers/tags.service';
 
 @Injectable()
 export class PostsService {
   constructor(
     private readonly usersService: UsersService,
+
+    private readonly tagsService: TagsService,
 
     @InjectRepository(Post)
     private readonly postsRepository: Repository<Post>,
@@ -34,6 +37,10 @@ export class PostsService {
       id: createPostDto.authorId,
     });
 
+    //Find tags
+
+    let tags = await this.tagsService.findMultipleTags(createPostDto.tags);
+
     /*Remember metaOptions are optional. */
     /*
     Due to cascade set to true (in the post entity), we dont need to worry about the metaOptions creation
@@ -44,6 +51,7 @@ export class PostsService {
     let newPost = this.postsRepository.create({
       ...createPostDto,
       author: user,
+      tags: tags,
     });
 
     //If the dto had metaOptions, the add them to the post.
