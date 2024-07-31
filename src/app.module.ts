@@ -11,7 +11,9 @@ import { MetaOptionsModule } from './meta-options/meta-options.module';
 import { Post } from './posts/post.entity';
 import { MetaOption } from './meta-options/meta-option.entity';
 import { Tag } from './tags/tag.entity';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
+const ENV = process.env.NODE_ENV;
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { ConfigModule } from '@nestjs/config';
     AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
+      //envFilePath: ['.env.development'],
+      envFilePath: !ENV ? '.env' : `.env.${ENV}`,
     }),
     TypeOrmModule.forRootAsync({
       imports: [],
@@ -43,3 +47,21 @@ import { ConfigModule } from '@nestjs/config';
   providers: [AppService],
 })
 export class AppModule {}
+
+/**
+ TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        //entities: [User],
+        synchronize: true,
+        port: +configService.get('DATABASE_PORT'),
+        username: configService.get('DATABASE_USER'),
+        password: configService.get('DATABASE_PASSWORD'),
+        host: configService.get('DATABASE_HOST'),
+        autoLoadEntities: true,
+        database: configService.get('DATABASE_NAME'),
+      }),
+    }),
+ */
