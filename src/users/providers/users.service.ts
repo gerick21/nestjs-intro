@@ -13,12 +13,12 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private readonly usersRepositosy: Repository<User>,
+    private readonly usersRepository: Repository<User>,
   ) {}
 
   async createUser(createUserDto: CreateUserDto) {
     //check if user exists with same email
-    const existingUser = await this.usersRepositosy.findOne({
+    const existingUser = await this.usersRepository.findOne({
       //checks if email exists.
       where: {
         email: createUserDto.email,
@@ -28,8 +28,8 @@ export class UsersService {
     //TODO
     //Create user
 
-    let newUser = this.usersRepositosy.create(createUserDto);
-    newUser = await this.usersRepositosy.save(newUser);
+    let newUser = this.usersRepository.create(createUserDto);
+    newUser = await this.usersRepository.save(newUser);
 
     return newUser;
   }
