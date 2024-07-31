@@ -50,7 +50,9 @@ export class Tag {
   featuredImageUrl?: string;
 
   /*A tag can have many posts related, for example #humor can have many posts related */
-  @ManyToMany(() => Post, (post) => post.tags)
+  @ManyToMany(() => Post, (post) => post.tags, {
+    onDelete: 'CASCADE',
+  })
   posts: Post[];
 
   @CreateDateColumn()
