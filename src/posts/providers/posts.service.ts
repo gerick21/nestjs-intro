@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/providers/users.service';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PostsService {
