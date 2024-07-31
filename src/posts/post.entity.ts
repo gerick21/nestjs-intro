@@ -1,7 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { postType } from './enums/postType.enum';
 import { postStatus } from './enums/postStatus.enum';
 import { CreatePostMetaoptionsDto } from '../meta-options/dtos/create-post-meta-options.dto';
+import { MetaOption } from 'src/meta-options/meta-option.entity';
 
 @Entity()
 export class Post {
@@ -64,15 +71,13 @@ export class Post {
   })
   publishOn?: Date;
 
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  tags?: string[];
+  @OneToOne(() => MetaOption)
+  /**
+   JoinColumn is responsibe for creating a column inside this entity table (Post)
+   */
+  /*This will create a metya options id column on the post table. */
+  @JoinColumn() /*Join column is used with 1 to 1 relationship.  */
+  metaOptions?: MetaOption;
 
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  metaOptions?: CreatePostMetaoptionsDto;
+  tags?: string[];
 }

@@ -15,9 +15,8 @@ export class PostsService {
   ) {}
 
   async createPost(createPostDto: CreatePostDto) {
-    let newPost = this.postRepository.create(createPostDto);
-
-    await this.postRepository.save(createPostDto);
+    //let newPost = this.postRepository.create(createPostDto);
+    // await this.postRepository.save(createPostDto);
   }
   findAll(userId: string) {
     /*Call the users service and if the user exists, return the post. */
