@@ -9,8 +9,8 @@ import { UsersService } from 'src/users/providers/users.service';
 import { SignInDto } from '../dtos/signin.dto';
 import { HashingProvider } from './hashing.provider';
 import { JwtService } from '@nestjs/jwt';
-import jwtConfig from '../config/jwt.config';
 import { ConfigType } from '@nestjs/config';
+import jwtConfig from '../config/jwt.config';
 
 @Injectable()
 export class SignInProvider {
