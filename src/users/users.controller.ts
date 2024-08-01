@@ -9,6 +9,7 @@ import {
   DefaultValuePipe,
   Patch,
   UseGuards,
+  SetMetadata,
 } from '@nestjs/common';
 import { UsersService } from './providers/users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -17,6 +18,8 @@ import { PatchUserDto } from './dtos/patch-user.dto';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateManyUsersDto } from './dtos/create-may-users.dto';
 import { AccessTokenGuard } from 'src/auth/guards/access-token/access-token.guard';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { AuthType } from 'src/auth/enums/auth-type.enum';
 // import { Request } from 'express';
 
 @Controller('users')
@@ -44,6 +47,8 @@ export class UsersController {
    */
 
   @Post()
+  //@SetMetadata('authType', 'none')
+  @Auth(AuthType.None)
   createUsers(@Body() createUsersDto: CreateUserDto) {
     return this.usersService.createUser(createUsersDto);
   }
