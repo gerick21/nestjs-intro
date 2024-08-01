@@ -10,13 +10,14 @@ import { Repository } from 'typeorm';
 import { Post } from '../post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePostDto } from '../dtos/create-post.dto';
-import { MetaOption } from 'src/meta-options/meta-option.entity';
 import { User } from 'src/users/user.entity';
 import { TagsService } from 'src/tags/providers/tags.service';
 import { PatchPostDto } from '../dtos/patch-post.dto';
 import { GetPostsDto } from '../dtos/get-posts.dto';
 import { PaginationProvider } from 'src/common/pagination/providers/pagination-provider';
 import { Paginated } from 'src/common/pagination/interfaces/paginated.interface';
+import { CreatePostProvider } from './create-post.provider';
+import { ActiveUserData } from 'src/auth/interfaces/active-user-data.interface';
 
 @Injectable()
 export class PostsService {
@@ -38,35 +39,13 @@ export class PostsService {
     private readonly usersRepository: Repository<User>,
 
     private readonly paginationProvider: PaginationProvider,
+
+    private readonly createPostProvider: CreatePostProvider,
   ) {}
 
   /*Creating new posts */
-  async createPost(@Body() createPostDto: CreatePostDto) {
-    //Find author from database based on authorId
-    let user = await this.usersRepository.findOneBy({
-      id: createPostDto.authorId,
-    });
-
-    //Find tags
-
-    let tags = await this.tagsService.findMultipleTags(createPostDto.tags);
-
-    /*Remember metaOptions are optional. */
-    /*
-    Due to cascade set to true (in the post entity), we dont need to worry about the metaOptions creation
-    because when a post is created that means a meta option will be created as well.
-    */
-
-    //Create post
-    let newPost = this.postsRepository.create({
-      ...createPostDto,
-      author: user,
-      tags: tags,
-    });
-
-    //If the dto had metaOptions, the add them to the post.
-
-    return await this.postsRepository.save(newPost);
+  async createPost(createPostDto: CreatePostDto, user: ActiveUserData) {
+    return await this.createPostProvider.create(createPostDto, user);
   }
   async findAll(
     postQuery: GetPostsDto,
