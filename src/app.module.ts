@@ -21,6 +21,10 @@ import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
 import environmentValidation from './config/environment.validation';
 import { CreateUserProvider } from './users/providers/create-user.provider';
+import { APP_GUARD } from '@nestjs/core';
+import { AccessTokenGuard } from './auth/guards/access-token/access-token.guard';
+import jwtConfig from './auth/config/jwt.config';
+import { JwtModule } from '@nestjs/jwt';
 
 // Get the current NODE_ENV
 const ENV = process.env.NODE_ENV;
@@ -52,12 +56,23 @@ const ENV = process.env.NODE_ENV;
         database: 'nestjs-blog',
       }),
     }),
+
     TagsModule,
     MetaOptionsModule,
     PaginationModule,
+    ConfigModule.forFeature(jwtConfig),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
   controllers: [AppController],
-  providers: [AppService, CreateUserProvider, FindOneUserByEmailProvider],
+  providers: [
+    AppService,
+    CreateUserProvider,
+    FindOneUserByEmailProvider,
+    {
+      provide: APP_GUARD,
+      useClass: AccessTokenGuard,
+    },
+  ],
 })
 export class AppModule {}
 
