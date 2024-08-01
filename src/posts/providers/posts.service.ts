@@ -16,6 +16,7 @@ import { TagsService } from 'src/tags/providers/tags.service';
 import { PatchPostDto } from '../dtos/patch-post.dto';
 import { GetPostsDto } from '../dtos/get-posts.dto';
 import { PaginationProvider } from 'src/common/pagination/providers/pagination-provider';
+import { Paginated } from 'src/common/pagination/interfaces/paginated.interface';
 
 @Injectable()
 export class PostsService {
@@ -67,7 +68,10 @@ export class PostsService {
 
     return await this.postsRepository.save(newPost);
   }
-  async findAll(postQuery: GetPostsDto, userId: string) {
+  async findAll(
+    postQuery: GetPostsDto,
+    userId: string,
+  ): Promise<Paginated<Post>> {
     /*Call the users service and if the user exists, return the post. */
 
     let posts = await this.paginationProvider.paginateQuery(
