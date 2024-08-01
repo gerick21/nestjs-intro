@@ -15,6 +15,7 @@ import { User } from 'src/users/user.entity';
 import { TagsService } from 'src/tags/providers/tags.service';
 import { PatchPostDto } from '../dtos/patch-post.dto';
 import { GetPostsDto } from '../dtos/get-posts.dto';
+import { PaginationProvider } from 'src/common/pagination/providers/pagination-provider';
 
 @Injectable()
 export class PostsService {
@@ -34,6 +35,8 @@ export class PostsService {
 
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+
+    private readonly paginationProvider: PaginationProvider,
   ) {}
 
   /*Creating new posts */
@@ -67,10 +70,13 @@ export class PostsService {
   async findAll(postQuery: GetPostsDto, userId: string) {
     /*Call the users service and if the user exists, return the post. */
 
-    let posts = await this.postsRepository.find({
-      skip: (postQuery.page - 1) * postQuery.limit,
-      take: postQuery.limit,
-    });
+    let posts = await this.paginationProvider.paginateQuery(
+      {
+        limit: postQuery.limit,
+        page: postQuery.page,
+      },
+      this.postsRepository,
+    );
 
     return posts;
   }
