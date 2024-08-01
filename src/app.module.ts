@@ -15,11 +15,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UsersModule } from './users/users.module';
 import { PaginationModule } from './common/pagination/pagination.module';
-import { CreateUserProvider } from './user/providers/create-user.provider';
-import { FindOneUserByEmailProvider } from './user/providers/find-one-user-by-email.provider';
+
+import { FindOneUserByEmailProvider } from './users/providers/find-one-user-by-email.provider';
 import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
 import environmentValidation from './config/environment.validation';
+import { CreateUserProvider } from './users/providers/create-user.provider';
 
 // Get the current NODE_ENV
 const ENV = process.env.NODE_ENV;

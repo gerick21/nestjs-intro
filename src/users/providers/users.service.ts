@@ -15,9 +15,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import profileConfig from '../config/profile.config';
 import { UsersCreateManyProvider } from './users-create-may.provider';
-import { CreateUserProvider } from 'src/user/providers/create-user.provider';
+
 import { CreateManyUsersDto } from '../dtos/create-may-users.dto';
-import { FindOneUserByEmailProvider } from 'src/user/providers/find-one-user-by-email.provider';
+import { CreateUserProvider } from './create-user.provider';
+import { FindOneUserByEmailProvider } from './find-one-user-by-email.provider';
 
 /**
  * Controller class for '/users' API endpoint
