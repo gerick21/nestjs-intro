@@ -14,6 +14,7 @@ import { MetaOption } from 'src/meta-options/meta-option.entity';
 import { User } from 'src/users/user.entity';
 import { TagsService } from 'src/tags/providers/tags.service';
 import { PatchPostDto } from '../dtos/patch-post.dto';
+import { GetPostsDto } from '../dtos/get-posts.dto';
 
 @Injectable()
 export class PostsService {
@@ -63,16 +64,12 @@ export class PostsService {
 
     return await this.postsRepository.save(newPost);
   }
-  async findAll(userId: string) {
+  async findAll(postQuery: GetPostsDto, userId: string) {
     /*Call the users service and if the user exists, return the post. */
 
     let posts = await this.postsRepository.find({
-      relations: {
-        /*When we fetch post this set to true will also return the metaOptions along with the author. */
-        metaOptions: true,
-        //author: true,
-        //tags: true,
-      },
+      skip: (postQuery.page - 1) * postQuery.limit,
+      take: postQuery.limit,
     });
 
     return posts;

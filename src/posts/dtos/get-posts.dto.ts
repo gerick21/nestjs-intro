@@ -2,7 +2,7 @@ import { IntersectionType } from '@nestjs/swagger';
 import { IsDate, IsOptional } from 'class-validator';
 import { PaginationQueryDto } from 'src/common/pagination/dtos/pagination-query.dto';
 
-export class GetPostsDto {
+export class GetPostsBaseDto {
   @IsDate()
   @IsOptional()
   startDate?: Date;
@@ -12,7 +12,7 @@ export class GetPostsDto {
   endDate?: Date;
 }
 
-export class GetPostDto extends IntersectionType(
-  GetPostsDto,
+export class GetPostsDto extends IntersectionType(
+  GetPostsBaseDto,
   PaginationQueryDto,
 ) {}
