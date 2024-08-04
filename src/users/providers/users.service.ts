@@ -8,11 +8,10 @@ import {
   Inject,
   Injectable,
   RequestTimeoutException,
-  forwardRef,
 } from '@nestjs/common';
 import { User } from '../user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ConfigService, ConfigType } from '@nestjs/config';
+import { ConfigType } from '@nestjs/config';
 import profileConfig from '../config/profile.config';
 import { UsersCreateManyProvider } from './users-create-may.provider';
 
@@ -31,9 +30,6 @@ export class UsersService {
      */
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-
-    @Inject(profileConfig.KEY)
-    private readonly profileConfiguration: ConfigType<typeof profileConfig>,
 
     /**
      * Inject UsersCreateMany provider
